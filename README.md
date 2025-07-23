@@ -46,9 +46,9 @@ Inside the FTP session, we list and download files from the files directory:
 
 cd files
 ls
-get leeme.txt
+get readme.txt
 
-The file leeme.txt contains the following credentials:
+The file readme.txt contains the following credentials:
 
 credenciales: thmuser:123456
 
