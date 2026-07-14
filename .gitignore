@@ -1,0 +1,32 @@
+# Virtual machine images
+*.ova
+*.vmdk
+*.vdi
+*.qcow2
+*.img
+
+# LibreOffice / Office files
+*.odt
+*.ods
+*.odp
+*.docx
+*.xlsx
+*.pptx
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Docker
+docker-compose.override.yml
