@@ -4,12 +4,12 @@
 |       Objetivo: Encontrar user.txt y root.txt|
 +---------------------------------------------+
 
-# 1. Construir imagen
-sudo docker build -t ftp-vuln /mnt/sdb/mis_datos/ORAMI/FTP-Vuln/
-
-# 2. Eliminar contenedor e imagen previos (si existen)
+# 1. Limpiar imagenes y contenedores previos (si existen)
 sudo docker stop ftp-vuln 2>/dev/null; sudo docker rm ftp-vuln 2>/dev/null
 sudo docker rmi ftp-vuln 2>/dev/null
+
+# 2. Construir imagen
+sudo docker build -t ftp-vuln .
 
 # 3. Ejecutar contenedor
 sudo docker run -d --name ftp-vuln -p 2121:21 -p 2222:22 -p 30000-30010:30000-30010 ftp-vuln
