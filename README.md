@@ -2,7 +2,7 @@
 
 ## Description
 
-Vulnerable virtual machine of **easy** level (beginner) designed to practice offensive cybersecurity. The objective is to fully compromise the system (boot-to-root) by exploiting misconfigurations in network services.
+Vulnerable VM designed to practice offensive cybersecurity. The objective is to fully compromise the system (boot-to-root) by exploiting misconfigurations in network services.
 
 - **Base system**: Ubuntu Server 20.04 / 22.04 / 24.04
 - **Difficulty**: Easy
