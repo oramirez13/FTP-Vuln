@@ -1,4 +1,4 @@
-# Resumen Ejecutivo Tecnico - FTP-Vuln
+# Resumen - FTP-Vuln
 
 ## Definicion
 Maquina vulnerable tipo CTF (Capture The Flag) de nivel principiante, disenada para practicar ciberseguridad ofensiva. El objetivo es comprometer completamente un sistema Ubuntu Server partiendo de un acceso inicial hasta obtener privilegios de root (boot-to-root).
