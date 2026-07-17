@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Diseno de una maquina vulnerable con las siguientes caracteristicas:
+Diseño de una máquina vulnerable con las siguientes características:
 
 - **Ubuntu Server** como sistema base.
 - Dos flags:
@@ -16,25 +16,25 @@ Diseno de una maquina vulnerable con las siguientes caracteristicas:
 
 **Servicio FTP mal configurado (vsftpd)**:
 
-- Login anonimo habilitado.
+- Login anónimo habilitado.
 - Un archivo oculto con credenciales.
-- Usuario con contrasena reutilizada para SSH.
-- SSH con autenticacion por contrasena habilitada.
+- Usuario con contraseña reutilizada para SSH.
+- SSH con autenticación por contraseña habilitada.
 - Escalada de privilegios mediante una tarea en cron.
 
-## Estructura de la Maquina
+## Estructura de la Máquina
 
-| Componente              | Detalle                                       |
-| ----------------------- | --------------------------------------------- |
-| Sistema base            | Ubuntu Server 20.04                           |
-| Servicio vulnerable     | vsftpd 3.0.3 con login anonimo habilitado     |
-| Usuario no-root         | `orami` con `/home/oramiuser/user.txt`        |
-| Flag de root            | `/root/root.txt`                              |
-| Escalada de privilegios | Mediante una tarea en cron mal configurada    |
+| Componente              | Detalle                                    |
+| ----------------------- | ------------------------------------------ |
+| Sistema base            | Ubuntu Server 20.04                        |
+| Servicio vulnerable     | vsftpd 3.0.3 con login anónimo habilitado  |
+| Usuario no-root         | `orami` con `/home/oramiuser/user.txt`     |
+| Flag de root            | `/root/root.txt`                           |
+| Escalada de privilegios | Mediante una tarea en cron mal configurada |
 
 ---
 
-## Paso a Paso para Configurar la Maquina
+## Paso a Paso para Configurar la Máquina
 
 ### 1. Instalar Ubuntu Server (VM)
 
@@ -65,13 +65,13 @@ chown oramiuser:oramiuser /home/oramiuser/user.txt
 apt update && apt install vsftpd -y
 ```
 
-Edicion de la configuracion:
+Edición de la configuración:
 
 ```bash
 nano /etc/vsftpd.conf
 ```
 
-Lineas que deben quedar configuradas:
+Líneas que deben quedar configuradas:
 
 ```
 listen=NO
@@ -101,7 +101,7 @@ systemctl restart vsftpd
 
 ### 4. Configurar SSH
 
-Se requiere que `orami` pueda acceder via SSH con contrasena:
+Se requiere que `orami` pueda acceder via SSH con contraseña:
 
 ```bash
 passwd orami  # se usa la misma contrasena que en el FTP
@@ -140,7 +140,7 @@ chmod +x /usr/local/bin/backup.sh
 
 Esto permite que cualquier usuario lo modifique para ejecutar comandos como root.
 
-### 6. Limpiar la maquina antes de empaquetar
+### 6. Limpiar la máquina antes de empaquetar
 
 ```bash
 sudo rm -rf /var/log/*.log
@@ -157,20 +157,20 @@ sudo rm -rf /home/*/.bash_history
 
 ---
 
-## Checklist de Verificacion
+## Checklist de Verificación
 
-- Funcionamiento del FTP anonimo.
+- Funcionamiento del FTP anónimo.
 - Acceso via SSH.
 - Escalada de privilegios funcional.
 - Flags en sus ubicaciones correctas.
 - Ruta boot-to-root sin pasos imposibles.
-- Estabilidad de la maquina al iniciar.
+- Estabilidad de la máquina al iniciar.
 
 ---
 
-## Ruta de Explotacion (Walkthrough)
+## Ruta de Explotación (Walkthrough)
 
-### Fase 1: Enumeracion de servicios
+### Fase 1: Enumeración de servicios
 
 ```bash
 nmap -sC -sV -Pn <IP_OBJETIVO>
@@ -184,7 +184,7 @@ PORT     STATE SERVICE VERSION
 22/tcp   open  ssh     OpenSSH 8.x
 ```
 
-### Fase 2: Enumeracion de FTP anonimo
+### Fase 2: Enumeración de FTP anónimo
 
 ```bash
 ftp <IP_OBJETIVO>
@@ -192,7 +192,7 @@ ftp <IP_OBJETIVO>
 # Password: [presionar ENTER]
 ```
 
-Una vez dentro de la sesion FTP:
+Una vez dentro de la sesión FTP:
 
 ```bash
 cd files
@@ -213,7 +213,7 @@ ssh oramiuser@<IP_OBJETIVO>
 # Contrasena: 123456
 ```
 
-Verificacion del usuario y lectura de la flag:
+Verificación del usuario y lectura de la flag:
 
 ```bash
 whoami
@@ -223,7 +223,7 @@ cat /home/oramiuser/user.txt
 # technova{user_flag_is_here}
 ```
 
-### Fase 4: Enumeracion de cronjobs
+### Fase 4: Enumeración de cronjobs
 
 ```bash
 cat /etc/cron.d/rootjob
@@ -235,7 +235,7 @@ Resultado:
 * * * * * root /usr/local/bin/backup.sh
 ```
 
-Verificacion de permisos:
+Verificación de permisos:
 
 ```bash
 ls -l /usr/local/bin/backup.sh
@@ -270,26 +270,26 @@ cat /root/root.txt
 
 ## Herramientas Utilizadas
 
-| Herramienta | Uso                                       |
-| ----------- | ----------------------------------------- |
-| nmap        | Escaneo de puertos y servicios            |
-| ftp         | Acceso anonimo a FTP                      |
-| ssh         | Acceso remoto a shell                     |
-| cron        | Ejecucion automatica de tareas como root  |
-| bash        | Creacion y ejecucion de scripts           |
-| chmod       | Cambio de permisos de archivos            |
+| Herramienta | Uso                                      |
+| ----------- | ---------------------------------------- |
+| nmap        | Escaneo de puertos y servicios           |
+| ftp         | Acceso anónimo a FTP                     |
+| ssh         | Acceso remoto a shell                    |
+| cron        | Ejecución automática de tareas como root |
+| bash        | Creación y ejecución de scripts          |
+| chmod       | Cambio de permisos de archivos           |
 
 ## Vulnerabilidades Explotadas
 
-1. FTP anonimo expuesto.
-2. Archivo con credenciales publicas.
+1. FTP anónimo expuesto.
+2. Archivo con credenciales públicas.
 3. Cronjob ejecutado como root y modificable.
 4. Permisos `777` en script ejecutado por root.
 5. Uso del bit SUID para ejecutar `/bin/bash` como root.
 
 ---
 
-## Consejos de Buen Diseno
+## Consejos de Buen Diseño
 
 - Banner de advertencia en `/etc/motd`.
 - Sin conexiones externas innecesarias.

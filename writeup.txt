@@ -1,4 +1,4 @@
-# FTP-Vuln: Boot-to-Root Machine for technova
+# FTP-Vuln: Boot-to-Root machine
 
 ## Description
 
@@ -86,16 +86,7 @@
 
 ---
 
-## Author Author
-
-- **Name**: Lucas Gonzalez
-- **Contact**: (optional)
-- **GitHub**: [https://github.com/orami](https://github.com/orami)
-- **Twitter/X**: @orami (optional)
-
----
-
-## [x] Evaluation Requirements (technova)
+## [x] Evaluation Requirements
 
 - [x] Functional boot-to-root.
 - [x] Flags set correctly.
@@ -118,6 +109,6 @@
 
 ## Credits Credits and Acknowledgments
 
-Inspired by basic challenges from Hack The Box, technova, and VulnHub.
+Inspired by basic challenges from Hack The Box, Try Hack Me, and VulnHub.
 
 ---
