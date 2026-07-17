@@ -1,4 +1,4 @@
-# FTP-Vuln: Maquina Vulnerable Boot-to-Root
+# FTP-Vuln: Máquina Vulnerable Boot-to-Root
 
 ## Objetivo
 
@@ -40,7 +40,7 @@ Diseño de una máquina vulnerable con las siguientes características:
 
 Se crea una VM en VirtualBox, VMware o KVM con Ubuntu Server 20.04:
 
-- Asignacion minima de 1GB RAM y 1 CPU.
+- Asignación mínima de 1GB RAM y 1 CPU.
 - Nombre: `FTP-Vuln`.
 - Red configurada como **adaptador en puente (bridge)** o **host-only** para pruebas.
 - SSH instalado: `sudo apt install openssh-server`
@@ -53,7 +53,7 @@ adduser orami
 echo "technova{this_is_the_user_flag}" > /home/oramiuser/user.txt
 echo "technova{this_is_the_root_flag}" > /root/root.txt
 
-# Asignacion de permisos
+# Asignación de permisos
 chmod 600 /home/oramiuser/user.txt
 chmod 600 /root/root.txt
 chown oramiuser:oramiuser /home/oramiuser/user.txt
@@ -84,7 +84,7 @@ anon_mkdir_write_enable=YES
 anon_root=/srv/ftp
 ```
 
-Preparacion del directorio para FTP:
+Preparación del directorio para FTP:
 
 ```bash
 mkdir -p /srv/ftp/files
@@ -104,7 +104,7 @@ systemctl restart vsftpd
 Se requiere que `orami` pueda acceder via SSH con contraseña:
 
 ```bash
-passwd orami  # se usa la misma contrasena que en el FTP
+passwd orami  # se usa la misma contraseña que en el FTP
 nano /etc/ssh/sshd_config
 ```
 
@@ -123,14 +123,14 @@ systemctl restart ssh
 
 ### 5. Agregar vector de escalada de privilegios
 
-Creacion del cronjob ejecutado por root:
+Creación del cronjob ejecutado por root:
 
 ```bash
 echo "* * * * * root /usr/local/bin/backup.sh" > /etc/cron.d/rootjob
 chmod 644 /etc/cron.d/rootjob
 ```
 
-Creacion del script vulnerable:
+Creación del script vulnerable:
 
 ```bash
 echo -e '#!/bin/bash\ntar czf /tmp/backup.tar.gz /home/oramiuser 2>/dev/null' > /usr/local/bin/backup.sh
