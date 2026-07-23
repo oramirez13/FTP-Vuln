@@ -14,7 +14,7 @@ Máquina vulnerable tipo CTF de nivel principiante, diseñada para practicar cib
 ## Vectores de vulnerabilidad
 
 1. **FTP con acceso anónimo habilitado** - Permite conexión sin credenciales
-2. **Credenciales debiles** - Usuario `orami` con contraseña `123456`
+2. **Credenciales debiles** - Usuario `oramiuser` con contraseña `123456`
 3. **SSH con autenticación por contraseña** - Permite acceso remoto
 4. **Cronjob con script de permisos 777** - Se ejecuta como root cada minuto y cualquier usuario puede modificarlo
 
@@ -24,7 +24,7 @@ Máquina vulnerable tipo CTF de nivel principiante, diseñada para practicar cib
 | ---- | ----------------------- | ----------------------------------------------- |
 | 1    | Enumeración con nmap    | Descubrimiento de puertos 21 y 22               |
 | 2    | Acceso FTP anónimo      | Descarga de archivo con credenciales            |
-| 3    | Acceso SSH              | Shell como usuario orami                        |
+| 3    | Acceso SSH              | Shell como usuario oramiuser                    |
 | 4    | Enumeración de cronjobs | Identificación de backup.sh ejecutado como root |
 | 5    | Modificación del script | Inyección de payload malicioso                  |
 | 6    | Ejecución del cronjob   | Obtención de shell como root                    |
@@ -32,7 +32,7 @@ Máquina vulnerable tipo CTF de nivel principiante, diseñada para practicar cib
 
 ## Flags
 
-- `/home/orami/user.txt` - Flag de usuario
+- `/home/oramiuser/user.txt` - Flag de usuario
 - `/root/root.txt` - Flag de root
 
 ## Archivos del proyecto
