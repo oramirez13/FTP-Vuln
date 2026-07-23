@@ -34,7 +34,7 @@ RUN mkdir -p /var/run/vsftpd/empty && \
 RUN mkdir /var/run/sshd && \
     sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
     sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
-    sed -i 's/^#PermitRootLogin prohibit-password/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config
+    sed -i 's/^#*PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config
 
 # Directorio FTP anonimo
 RUN mkdir -p /srv/ftp/files && \

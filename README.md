@@ -7,7 +7,7 @@ Vulnerable VM designed to practice offensive cybersecurity. The objective is to 
 - **Base system**: Ubuntu Server 20.04 / 22.04 / 24.04
 - **Difficulty**: Easy
 - **Flags**: user.txt, root.txt
-- **Vulnerable user**: orami
+- **Vulnerable user**: oramiuser
 - **Author**: orami
 
 ## Learning objectives
@@ -196,7 +196,7 @@ cat /root/root.txt
 
 | Flag     | Location                  |
 |----------|---------------------------|
-| user.txt | /home/orami/user.txt    |
+| user.txt | /home/oramiuser/user.txt |
 | root.txt | /root/root.txt            |
 
 ## Privilege escalation explained
@@ -261,11 +261,23 @@ On any Debian/Ubuntu distro:
 sudo ./setup.sh
 ```
 
-### Option 2: Docker
+## SSH host key warning
+
+When connecting to the container via SSH for the first time (or after rebuilding), you may see:
 
 ```
-docker build -t ftp-vuln .
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 ```
+
+This happens because the container generates a new SSH key on each build. To fix it, remove the old key for that port:
+
+```bash
+ssh-keygen -R "[localhost]:2222"
+```
+
+Then reconnect normally.
 
 ## setup.sh requirements
 

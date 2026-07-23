@@ -50,12 +50,24 @@
 
 ---
 
-## Flags Flags
+## Flags
 
 | Flag | Location |
 |----------|----------------------------|
 | user.txt | `/home/oramiuser/user.txt` |
 | root.txt | `/root/root.txt` |
+
+---
+
+## SSH host key warning
+
+When connecting to the container via SSH for the first time (or after rebuilding), you may see a "REMOTE HOST IDENTIFICATION HAS CHANGED" warning. This happens because the container generates a new SSH key on each build. To fix it:
+
+```bash
+ssh-keygen -R "[localhost]:2222"
+```
+
+Then reconnect normally.
 
 ---
 
@@ -107,7 +119,7 @@
 
 ---
 
-## Credits Credits and Acknowledgments
+## Credits and Acknowledgments
 
 Inspired by basic challenges from Hack The Box, Try Hack Me, and VulnHub.
 

@@ -28,7 +28,7 @@ Diseño de una máquina vulnerable con las siguientes características:
 | ----------------------- | ------------------------------------------ |
 | Sistema base            | Ubuntu Server 20.04                        |
 | Servicio vulnerable     | vsftpd 3.0.3 con login anónimo habilitado  |
-| Usuario no-root         | `orami` con `/home/oramiuser/user.txt`     |
+| Usuario no-root         | `oramiuser` con `/home/oramiuser/user.txt` |
 | Flag de root            | `/root/root.txt`                           |
 | Escalada de privilegios | Mediante una tarea en cron mal configurada |
 

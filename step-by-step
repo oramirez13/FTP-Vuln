@@ -17,6 +17,9 @@ sudo docker run -d --name ftp-vuln -p 2121:21 -p 2222:22 -p 30000-30010:30000-30
 # 4. Escanear servicios con nmap
 nmap -sC -sV -p 2121,2222 localhost
 
+# Si SSH muestra "REMOTE HOST IDENTIFICATION HAS CHANGED":
+ssh-keygen -R "[localhost]:2222"
+
 # 5. FTP anónimo (obligatorio -p para modo pasivo)
 ftp -p localhost 2121
 # Name: anonymous
